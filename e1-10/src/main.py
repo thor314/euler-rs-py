@@ -75,3 +75,7 @@ def e4():
             if is_pal(prod) and prod > max:
                 max = prod
     print(max)
+
+@timing
+def e5():
+    print(19*17*16*13*11*9*7*5)

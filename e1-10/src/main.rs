@@ -54,7 +54,11 @@ fn e4() {
     println!("{}", max);
 }
 
-
+// What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+fn e5() {
+    let a = 19 * 17 * 16 * 13 * 11 * 9 * 7 * 5;
+    println!("{}", a);
+}
 
 fn main() {
     let now = std::time::Instant::now();
@@ -71,5 +75,9 @@ fn main() {
 
     let now = std::time::Instant::now();
     e4();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e5();
     println!("time:{:?}", now.elapsed());
 }
