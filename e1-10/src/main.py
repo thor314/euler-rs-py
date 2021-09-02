@@ -1,4 +1,5 @@
 import time
+import math
 
 def timing(f):
     """Convenient decorator to time a function. Borrowed from:
@@ -29,11 +30,29 @@ def e2():
         init = (init[0] + init[1], init[0])
     print(sum)
 
+@timing
+def e2k():
+    """more precisely what I did in the rust solution, used a closure (lambda)"""
+    init = (1,1)
+    sum = 0
+    f = lambda a,b: (a+b, a)
+    while init[0] < 4000000:
+        if init[0] % 2 == 0:
+            sum += init[0]
+        init = f(init[0],init[1])
+    print(sum)
 
-
-def main():
-    e1()
-    e2()
-
-if __name__ == "__main__":
-    main()
+@timing
+def e3():
+    """largest prime factor of 600851475143g"""
+    x = 600851475143
+    root_x = math.sqrt(x)
+    i = 3
+    factors = []
+    while i < root_x and x > 1:
+        if x % i == 0:
+            factors.append(i)
+            x /= i
+            i -= 2
+        i += 2
+    print(factors)
