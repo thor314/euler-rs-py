@@ -79,3 +79,73 @@ def e4():
 @timing
 def e5():
     print(19*17*16*13*11*9*7*5)
+
+@timing
+def e6():
+    """Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum."""
+    sum_of_squares = sum(map(lambda x: x*x, range(101)))
+    summ = sum(range(101))
+    square_of_sums = summ*summ
+
+    print("diff of %s and %s is %s" % (sum_of_squares, square_of_sums, square_of_sums - sum_of_squares))
+
+@timing
+def e7():
+    """get the 10,0001st prime"""
+    # this is the first problem where the answer is not immediately obvious, if we accept that we should generate our own primes
+    # naive algorithm: n=3, increment by 2, check if any element in the list primes divides n, stop when the 10,001st prime is collected
+    count = 1
+    primes = [2]
+    n=3
+
+    while count < 10001:
+        b = True
+        for p in primes:
+            if n % p == 0:
+                #print("%s divides %s" % (p, n))
+                b = False
+                # n is not prime
+                break
+        if b == True:
+            #print("appending %s" % n)
+            primes.append(n)
+            #print("primes: ", primes)
+            count+=1
+        n+=2
+
+    print(primes[-1])
+
+
+from pathlib import Path
+import os
+import numpy
+@timing
+def e8():
+    """get the 13 adjacent digits of e8.txt that produce the largest product.
+    Struggled with opening a file for 20 minutes. Solved with an absolute path. Wtf, why not relative path in defaults?
+    """
+    # FileNotFoundError: [Errno 2] No such file or directory: 'e8.txt'
+    if os.path.isfile('/home/thor/euler/e1-10/src/e8.txt'):
+        print("file found") #this arm triggers
+        s = Path('/home/thor/euler/e1-10/src/e8.txt').read_text().replace('\n','')
+    else:
+        print("wtf")
+
+    max_prod = 0
+    # cycle through s, taking each digit, mapping to int, multiplying, saving product if larger than max.
+    for i in range(len(s) - 13):
+        # TypeError: string indices must be integers, whoops, colon not comma
+        v = s[i:i+13]
+        #print("try:", v)
+        # took awhile to find this:
+        int_v = [int(i) for i in v]
+
+        #AttributeError: 'map' object has no attribute 'astype'
+        #v.astype(np.int)
+        #TypeError: cannot perform reduce with flexible type
+        prod = numpy.prod(int_v)
+
+        if prod > max_prod:
+
+            max_prod = prod
+    print(max_prod)

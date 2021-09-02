@@ -60,6 +60,60 @@ fn e5() {
     println!("{}", a);
 }
 
+fn e6() {
+    let sum_of_squares: u32 = (1..=100).map(|x| x * x).sum();
+    let sum = (1..=100).sum::<u32>();
+    let square_of_sums = sum * sum;
+    println!(
+        "diff of {} and {} is {}",
+        sum_of_squares,
+        square_of_sums,
+        square_of_sums - sum_of_squares
+    );
+}
+
+fn e7() {
+    let mut count = 1;
+    let mut primes: Vec<u32> = vec![2];
+    let mut n: u32 = 3;
+    while count < 10001 {
+        let mut b = true;
+        for p in &primes {
+            if n % p == 0 {
+                b = false;
+                break;
+            }
+        }
+        if b {
+            primes.push(n);
+            count += 1;
+        }
+        n += 2;
+    }
+    println!("{:?}", primes.last())
+}
+
+fn e8() {
+    let s: Vec<u64> = std::fs::read_to_string("src/e8.txt")
+        .unwrap()
+        .replace("\n", "")
+        .chars()
+        .map(|c| c.to_string().parse().unwrap())
+        .collect();
+    //println!("{:?}", s);
+
+    let mut max_prod = 0;
+    for i in 0..=(s.len() - 13) {
+        let v: Vec<u64> = s[i..(i + 13)].to_vec();
+
+        let prod: u64 = v.iter().product();
+        if prod > max_prod {
+            max_prod = prod;
+        }
+    }
+    println!("max prod: {}", max_prod);
+}
+
 fn main() {
     let now = std::time::Instant::now();
     e1();
@@ -75,9 +129,22 @@ fn main() {
 
     let now = std::time::Instant::now();
     e4();
+
     println!("time:{:?}", now.elapsed());
 
     let now = std::time::Instant::now();
     e5();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e6();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e7();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e8();
     println!("time:{:?}", now.elapsed());
 }
