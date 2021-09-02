@@ -36,6 +36,26 @@ fn e3() {
     println!("{:?}", factors);
 }
 
+fn is_pal(i: u32) -> bool {
+    let s = i.to_string();
+    s == s.chars().rev().collect::<String>()
+}
+
+fn e4() {
+    let mut max = 0;
+    for i in 100..=999 {
+        for j in i..=999 {
+            let prod = i * j;
+            if is_pal(prod) && prod > max {
+                max = prod;
+            }
+        }
+    }
+    println!("{}", max);
+}
+
+
+
 fn main() {
     let now = std::time::Instant::now();
     e1();
@@ -47,5 +67,9 @@ fn main() {
 
     let now = std::time::Instant::now();
     e3();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e4();
     println!("time:{:?}", now.elapsed());
 }

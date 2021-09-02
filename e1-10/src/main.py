@@ -56,3 +56,22 @@ def e3():
             i -= 2
         i += 2
     print(factors)
+
+def is_pal(i):
+    s = str(i)
+
+    if s == s[::-1]:
+        return 1
+    else:
+        return 0
+
+@timing
+def e4():
+    """Find the largest palindrome made from the product of two 3-digit numbers."""
+    max = 0
+    for i in range(100,999):
+        for j in range(i,999):
+            prod = i*j
+            if is_pal(prod) and prod > max:
+                max = prod
+    print(max)
