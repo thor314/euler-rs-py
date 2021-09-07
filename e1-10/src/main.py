@@ -149,3 +149,54 @@ def e8():
 
             max_prod = prod
     print(max_prod)
+
+@timing
+def e9():
+    for a in range(1,1001):
+        for b in range(a,1001):
+            for c in range(b,1001):
+                if c*c == b*b + a*a:
+                    #print("candidate: %s, %s, %s" % (a, b, c))
+                    if a + b + c == 1000:
+                        print("success! Pythagorean candidate found: %s, %s, %s, with product: %s" % (a, b,c, a*b*c))
+
+
+@timing
+def e10_slow():
+    """Find the sum of all the primes below two million."""
+    k = 2_000_000
+    r = [n for n in range(3,k,2)]
+    i = 0
+    while i < len(r) and i < math.sqrt(k):
+        p = r[i]
+        i +=1
+        j = i
+        while j < len(r):
+            if r[j] % p == 0:
+                # remove r[j] from r
+                del r[j]
+            j+=1
+
+    print("first 100 primes?: %s" % r[:100])
+    print("sum of primes: %s" % (2+sum(r)))
+    # this problem ran in 80 seconds.
+    # what could I have done more efficiently, presupposing I disallow myself to use a pre-generated list of primes?
+    # Well, I might have tried instead
+
+@timing
+def e10_even_slower():
+    """unfortunately, this ain't better. About 7* slower in fact."""
+    k = 200_000
+    r = [2,3,5,7]
+    i = 9
+    while i < k:
+        for j in r:
+            if i % j == 0:
+                #print("nope: %s" % i)
+                break
+        #print("yup: %s" % i)
+        if i % j != 0:
+            r.append(i)
+        i+=2
+    print("first 100 primes?: %s" % r[:100])
+    print("sum of primes: %s" % (sum(r)))

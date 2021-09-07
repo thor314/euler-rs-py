@@ -114,6 +114,52 @@ fn e8() {
     println!("max prod: {}", max_prod);
 }
 
+/*
+There exists exactly one Pythagorean triplet for which a + b + c = 1000.
+Find the product abc.
+ */
+fn e9() {
+    for a in 1..=1000 {
+        for b in a..=1000 {
+            for c in b..=1000 {
+                if c * c == b * b + a * a {
+                    //println!("pythagorean candidate: {}, {}, {}", a, b, c);
+                    if a + b + c == 1000 {
+                        println!(
+                            "success! Pythagorean candidate found: {}, {}, {}, with product: {}",
+                            a,
+                            b,
+                            c,
+                            a * b * c
+                        );
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn e10() {
+    let k: u64 = 2_000_000;
+    let k_root: usize = (k as f64).sqrt() as usize;
+    let mut r: Vec<u64> = (3..=k).step_by(2).collect();
+    let (mut i, mut j): (usize, usize) = (0, 0);
+
+    while i < r.len() && i < k_root {
+        let p = r[i];
+        i += 1;
+        j = i;
+        while j < r.len() {
+            if r[j] % p == 0 {
+                r.remove(j);
+            }
+            j += 1;
+        }
+    }
+    //println!("r: {:?}", r);
+    println!("sum: {:?}", 2 + r.iter().sum::<u64>());
+}
+
 fn main() {
     let now = std::time::Instant::now();
     e1();
@@ -146,5 +192,13 @@ fn main() {
 
     let now = std::time::Instant::now();
     e8();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e9();
+    println!("time:{:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    e10();
     println!("time:{:?}", now.elapsed());
 }
