@@ -1,3 +1,8 @@
+// useful references to other solutions
+// https://github.com/zacharydenton/euler
+// https://github.com/gifnksm/ProjectEulerRust/tree/master/src/bin
+// https://github.com/dhbradshaw/ProjectEulerFastRust/blob/master/src/problems.rs
+// https://github.com/groumache/project-euler-rust/blob/master/src/problem001to010.rs
 fn e1() {
     let threes = 3 * 333 * 334 / 2;
     let fives = 5 * 199 * 200 / 2;
@@ -92,6 +97,40 @@ fn e7() {
     }
     println!("{:?}", primes.last())
 }
+// review: could have used a sieve of eratosthenes
+#[allow(dead_code)]
+/// Return a vector of primes less than limit
+fn eratosthenes(limit: usize) -> Vec<usize> {
+    // https://github.com/zacharydenton/euler/blob/master/007/sieve.rs
+    // initialize a vector of length `limit`
+    let mut sieve = vec![true; limit];
+    let mut p = 2;
+    loop {
+        // sieve all multiples of p
+        let mut i = 2 * p - 1;
+        while i < limit {
+            sieve[i] = false;
+            i += p;
+        }
+        // find the next prime p
+        if let Some(n) = (p..limit).find(|&n| sieve[n] /* true */) {
+            p = n + 1; // no off by one pls
+                       //println!("next p: {}", p);
+        } else {
+            break;
+        }
+    }
+    // remove all the dead values and return array
+    let s = sieve
+        .iter()
+        .enumerate()
+        .filter(|&(_, &is_prime)| is_prime)
+        .skip(1)
+        .map(|(i, _)| i + 1)
+        .collect();
+    //println!("values: {:?}", s);
+    s
+}
 
 fn e8() {
     let s: Vec<u64> = std::fs::read_to_string("src/e8.txt")
@@ -139,6 +178,24 @@ fn e9() {
     }
 }
 
+fn e9_better() {
+    for a in 1..=1000 {
+        for b in a..=1000 {
+            let c = 1000 - a - b;
+            if c * c == b * b + a * a {
+                //println!("pythagorean candidate: {}, {}, {}", a, b, c);
+                println!(
+                    "success! Pythagorean candidate found: {}, {}, {}, with product: {}",
+                    a,
+                    b,
+                    c,
+                    a * b * c
+                );
+            };
+        }
+    }
+}
+
 fn e10() {
     let k: u64 = 2_000_000;
     let k_root: usize = (k as f64).sqrt() as usize;
@@ -160,9 +217,16 @@ fn e10() {
     println!("sum: {:?}", 2 + r.iter().sum::<u64>());
 }
 
+fn e10_better() {
+    // 300ms
+    let limit = 2_000_000;
+    let primes: Vec<usize> = eratosthenes(limit);
+    println!("sum: {:?}", primes.iter().sum::<usize>());
+}
+
 fn main() {
     let now = std::time::Instant::now();
-    e1();
+    e10_better();
     println!("time:{:?}", now.elapsed());
 
     let now = std::time::Instant::now();
@@ -195,10 +259,10 @@ fn main() {
     println!("time:{:?}", now.elapsed());
 
     let now = std::time::Instant::now();
-    e9();
+    e9_better();
     println!("time:{:?}", now.elapsed());
 
     let now = std::time::Instant::now();
-    e10();
+    e10_better();
     println!("time:{:?}", now.elapsed());
 }
