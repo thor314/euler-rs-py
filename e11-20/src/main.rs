@@ -107,7 +107,24 @@ fn e12() {
     }
 }
 
+#[timings]
+fn e13() {
+    let s: Vec<String> = std::fs::read_to_string("src/e13.txt")
+        .unwrap()
+        .split_whitespace()
+        .map(|s| s.parse::<String>().unwrap())
+        .collect();
+    let s13: Vec<usize> = s
+        .iter()
+        .map(|l| l[..13].parse::<usize>().unwrap())
+        .collect();
+
+    let n = s13.iter().sum::<usize>().to_string();
+    println!("e13: {}", &n[..10]);
+}
+
 fn main() {
     e11();
     e12();
+    e13();
 }

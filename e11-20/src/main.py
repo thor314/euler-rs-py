@@ -100,3 +100,15 @@ def e12():
         if n_divisors > 500:
             print("value: %s, the %sth triangle with %s divisors" %(sum, i, n_divisors))
             break
+
+@time.timing
+def e13():
+    from pathlib import Path
+    import os
+    # FileNotFoundError: [Errno 2] No such file or directory: 'e8.txt'
+    if os.path.isfile('/home/thor/euler/e11-20/src/e13.txt'):
+        s = Path('/home/thor/euler/e11-20/src/e13.txt').read_text()
+    rows = s.strip().split('\n')
+
+    rows13 = list(map(lambda s: int(s[:13]), rows))
+    print("e13:", str(sum(rows13))[:10])

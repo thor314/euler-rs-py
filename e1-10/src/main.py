@@ -3,8 +3,8 @@
 # http://www.s-anand.net/euler.html
 # https://github.com/nayuki/Project-Euler-solutions/tree/master/python
 
-import time
 import math
+import time
 
 def timing(f):
     """Convenient decorator to time a function. Borrowed from:
