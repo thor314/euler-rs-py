@@ -112,3 +112,42 @@ def e13():
 
     rows13 = list(map(lambda s: int(s[:13]), rows))
     print("e13:", str(sum(rows13))[:10])
+
+def collatz(n):
+    if n % 2 == 0:
+        return n/2
+    else:
+        return n*3+1
+
+@time.timing
+def e14():
+    h = {1:0}
+
+    it_counter = 0
+    biggest = (0,0)
+    for it in range(2,1_000_000):
+        #print(it, h)
+        if it in h:
+            continue
+
+        nextt = collatz(it)
+        it_counter+=1
+        cache = [(it, it_counter)]
+        while nextt not in h:
+            it_counter +=1
+            cache.append((nextt, it_counter))
+            nextt = collatz(nextt)
+
+        count_last = h[nextt]
+        count_for_it = count_last + it_counter
+
+        for n,c in cache:
+            #print(n,c)
+            count = count_for_it + 1 - c
+            h[n] = count
+        it_counter = 0
+
+        if count_for_it > biggest[0]:
+            biggest = (count_for_it, it)
+
+    print("biggest seq len: %s, for n=%s" % (biggest[0], biggest[1]))

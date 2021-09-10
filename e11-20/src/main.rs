@@ -123,8 +123,58 @@ fn e13() {
     println!("e13: {}", &n[..10]);
 }
 
+fn collatz(n: usize) -> usize {
+    match n % 2 {
+        0 => n / 2,
+        1 => 3 * n + 1,
+        _ => unreachable!(),
+    }
+}
+#[timings]
+fn e14() {
+    use std::collections::HashMap;
+    let mut h = HashMap::new();
+    h.insert(1, 0);
+
+    let mut it_counter = 0;
+    let mut biggest = (0, 0);
+    for it in 2..1_000_000 {
+        if h.contains_key(&it) {
+            continue;
+        }
+
+        // Build a cache of values til we find a value we have seen
+        let mut next = collatz(it);
+        it_counter += 1;
+        let mut cache: Vec<(usize, usize)> = vec![(it, it_counter)]; // 2: 1
+        while h.get(&next).is_none() {
+            it_counter += 1;
+            cache.push((next, it_counter));
+            next = collatz(next);
+        }
+
+        // the next value is now in the hashmap
+        let count_last = *h.get(&next).unwrap();
+        let count_for_it = count_last + it_counter;
+        //println!("it:{},count: {}", it, count_for_it);
+
+        for (n, c) in cache {
+            let count = count_for_it + 1 - c;
+            //println!("n:{},c: {}, count: {}", n, c, count);
+            h.insert(n, count);
+        }
+        it_counter = 0;
+
+        if count_for_it > biggest.0 {
+            biggest = (count_for_it, it);
+        }
+    }
+    println!("biggest seq len: {:?}, for n={:?}", biggest.0, biggest.1);
+}
+
 fn main() {
     e11();
     e12();
     e13();
+    e14();
 }
