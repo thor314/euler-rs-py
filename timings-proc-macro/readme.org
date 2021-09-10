@@ -1,0 +1,4 @@
+* What this
+This a procedural macro meant to grab a quick and dirty timing decorator for my project euler functions.
+
+This also mah first proc macro. Yay macros, what a beautiful world.
