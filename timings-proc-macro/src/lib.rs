@@ -21,13 +21,14 @@ pub fn timings(_attr: TokenStream, item: TokenStream) -> TokenStream {
 fn handle_timings_macro(ast: &syn::ItemFn) -> TokenStream {
     let vis = &ast.vis;
     let sig = &ast.sig;
+    let ident = &ast.sig.ident.to_string();
     let block_stmts = &ast.block.stmts;
     let gen = quote::quote! {
       #vis #sig
       {
         let now = std::time::Instant::now();
         #(#block_stmts)*
-        println!("time: {:?}", now.elapsed());
+        println!("{} time: {:?}", #ident, now.elapsed());
       }
     };
     gen.into()
