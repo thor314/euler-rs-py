@@ -3,6 +3,9 @@
 // https://github.com/gifnksm/ProjectEulerRust/tree/master/src/bin
 // https://github.com/dhbradshaw/ProjectEulerFastRust/blob/master/src/problems.rs
 // https://github.com/groumache/project-euler-rust/blob/master/src/problem001to010.rs
+extern crate timings_proc_macro;
+use timings_proc_macro::timings;
+#[timings]
 fn e1() {
     let threes = 3 * 333 * 334 / 2;
     let fives = 5 * 199 * 200 / 2;
@@ -10,7 +13,7 @@ fn e1() {
     let out = threes + fives - fifteens;
     println!("{}", out);
 }
-
+#[timings]
 fn e2() {
     let mut init = (1, 1);
     let f = |(a, b)| -> (u32, u32) { (a + b, a) };
@@ -24,7 +27,7 @@ fn e2() {
     }
     println!("{}", sum);
 }
-
+#[timings]
 fn e3() {
     let mut x: u64 = 600851475143;
     let root_x = (x as f64).sqrt() as u64;
@@ -60,11 +63,12 @@ fn e4() {
 }
 
 // What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+#[timings]
 fn e5() {
     let a = 19 * 17 * 16 * 13 * 11 * 9 * 7 * 5;
     println!("{}", a);
 }
-
+#[timings]
 fn e6() {
     let sum_of_squares: u32 = (1..=100).map(|x| x * x).sum();
     let sum = (1..=100).sum::<u32>();
@@ -76,7 +80,7 @@ fn e6() {
         square_of_sums - sum_of_squares
     );
 }
-
+#[timings]
 fn e7() {
     let mut count = 1;
     let mut primes: Vec<u32> = vec![2];
@@ -95,7 +99,7 @@ fn e7() {
         }
         n += 2;
     }
-    println!("{:?}", primes.last())
+    println!("{:?}", primes.last());
 }
 // review: could have used a sieve of eratosthenes
 #[allow(dead_code)]
@@ -131,7 +135,7 @@ fn eratosthenes(limit: usize) -> Vec<usize> {
     //println!("values: {:?}", s);
     s
 }
-
+#[timings]
 fn e8() {
     let s: Vec<u64> = std::fs::read_to_string("src/e8.txt")
         .unwrap()
@@ -157,6 +161,7 @@ fn e8() {
 There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 Find the product abc.
  */
+#[timings]
 fn e9() {
     for a in 1..=1000 {
         for b in a..=1000 {
@@ -177,7 +182,7 @@ fn e9() {
         }
     }
 }
-
+#[timings]
 fn e9_better() {
     for a in 1..=1000 {
         for b in a..=1000 {
@@ -195,7 +200,7 @@ fn e9_better() {
         }
     }
 }
-
+#[timings]
 fn e10() {
     let k: u64 = 2_000_000;
     let k_root: usize = (k as f64).sqrt() as usize;
@@ -216,7 +221,7 @@ fn e10() {
     //println!("r: {:?}", r);
     println!("sum: {:?}", 2 + r.iter().sum::<u64>());
 }
-
+#[timings]
 fn e10_better() {
     // 300ms
     let limit = 2_000_000;
@@ -225,44 +230,14 @@ fn e10_better() {
 }
 
 fn main() {
-    let now = std::time::Instant::now();
-    e10_better();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
+    e1();
     e2();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e3();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e4();
-
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e5();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e6();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e7();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e8();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e9_better();
-    println!("time:{:?}", now.elapsed());
-
-    let now = std::time::Instant::now();
     e10_better();
-    println!("time:{:?}", now.elapsed());
 }
