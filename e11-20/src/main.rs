@@ -123,6 +123,7 @@ fn e13() {
     println!("e13: {}", &n[..10]);
 }
 
+#[allow(dead_code)]
 fn collatz(n: usize) -> usize {
     match n % 2 {
         0 => n / 2,
@@ -172,9 +173,91 @@ fn e14() {
     println!("biggest seq len: {:?}, for n={:?}", biggest.0, biggest.1);
 }
 
+// How many such (only move left or down) routes are there through a 20×20 grid?
+#[timings]
+fn e15() {
+    // basic combinatorics. of 40 positions, choose 20. Equally, the 20th Catalan.
+    let a: u128 = (21..=40).product();
+    let b: u128 = (2..=20).product();
+    println!("{}", a / b);
+}
+
+#[timings]
+fn e16() {
+    // mostly, futzing with bigint.
+    use num_bigint::BigUint;
+    // note that 2**1000 will have about 300 digits, so can't fit into a normal integer representation. Need a bigint.
+    let a = BigUint::new(vec![2]);
+    let b = a.pow(1000);
+    //println!("{:?}", b);
+    // TFAE:
+    //let res = b.to_string().chars().fold(0, |a, d| a + d.to_digit(10).unwrap());
+    let res: u32 = b.to_string().chars().map(|c| c.to_digit(10).unwrap()).sum();
+    println!("{:?}", res);
+
+    //let digits: num::BigInt = 2.pow(1000);
+}
+
+// If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
+#[timings]
+fn e17() {
+    let map = vec![
+        (0, 0),
+        (1, 3),
+        (2, 3),
+        (3, 5),
+        (4, 4),
+        (5, 4),
+        (6, 3),
+        (7, 5),
+        (8, 5),
+        (9, 4),
+        (10, 3),
+        (11, 6),
+        (12, 6),
+        (13, 8),
+        (14, 8),
+        (15, 7),
+        (16, 7),
+        (17, 9),
+        (18, 8),
+        (19, 8),
+        (20, 6),
+        (30, 6),
+        (40, 5),
+        (50, 5),
+        (60, 5),
+        (70, 7),
+        (80, 6),
+        (90, 6),
+    ];
+    let h = std::collections::HashMap::from_iter(map.into_iter());
+    let res: usize = (1..=1000).fold(0, |acc, x| acc + count_letters(x, &h));
+    println!("{}", res);
+}
+fn count_letters(d: usize, h: &std::collections::HashMap<usize, usize>) -> usize {
+    let (a, b, c, e) = (d % 10, d / 10 % 10, d / 100 % 10, d / 1000 % 10);
+    let aa = if b == 1 { 0 } else { *h.get(&a).unwrap() };
+    let bb = if b == 1 {
+        *h.get(&(b * 10 + a)).unwrap()
+    } else {
+        *h.get(&(b * 10)).unwrap()
+    };
+    let mut cc = if c > 0 { 3 + 7 + h.get(&c).unwrap() } else { 0 }; //  "and" counts apparently
+    if c > 0 && aa == 0 && bb == 0 {
+        cc -= 3 // 100 doesn't have an "and"
+    };
+    let ee = if e > 0 { 8 + h.get(&e).unwrap() } else { 0 };
+    println!("{}:{},{},{},{}", d, ee, cc, bb, aa);
+    aa + bb + cc + ee
+}
+
 fn main() {
     e11();
     e12();
     e13();
-    e14();
+    //e14();
+    e15();
+    e16();
+    e17();
 }

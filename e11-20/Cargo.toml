@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 itertools = "0.9.0"
+num-bigint = "0.4.2"
 timings_proc_macro = {path = "../timings-proc-macro"}

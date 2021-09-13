@@ -88,17 +88,17 @@ def multiplicities(inp):
 def e12():
     import functools
     i = 2
-    sum = 1
+    summ = 1
     while True:
-        sum+=i
+        summ+=i
         i+=1
-        divisors = multiplicities(sum)
+        divisors = multiplicities(summ)
         n_divisors = 1
         f = lambda acc, x: acc * (x+1)
         [n_divisors := f(n_divisors, x) for x in divisors.values()]
 
         if n_divisors > 500:
-            print("value: %s, the %sth triangle with %s divisors" %(sum, i, n_divisors))
+            print("value: %s, the %sth triangle with %s divisors" %(summ, i, n_divisors))
             break
 
 @time.timing
@@ -151,3 +151,81 @@ def e14():
             biggest = (count_for_it, it)
 
     print("biggest seq len: %s, for n=%s" % (biggest[0], biggest[1]))
+
+@time.timing
+def e15():
+    from functools import reduce
+    a = reduce(lambda a, b: a*b, range(21,41))
+    b = reduce(lambda a, b: a*b, range(1,21))
+    print(a/b)
+
+# What is the sum of the digits of the number 2**1000?
+@time.timing
+def e16():
+    from functools import reduce
+    digits = str(2**1000)
+    a = reduce(lambda a, b: int(a)+int(b), digits)
+    print(a)
+
+
+@time.timing
+def e17():
+    d = {
+        0: 0,
+        1: 3,
+        2: 3,
+        3: 5,
+        4: 4,
+        5: 4,
+        6: 3,
+        7: 5,
+        8: 5,
+        9: 4,
+        10: 3,
+        11: 6,
+        12: 6,
+        13: 8,
+        14: 8,
+        15: 7,
+        16: 7,
+        17: 9,
+        18: 8,
+        19: 8,
+        20: 6,
+        30: 6,
+        40: 5,
+        50: 5,
+        60: 5,
+        70: 7,
+        80: 6,
+        90: 6,
+    }
+
+    ans = sum(map(lambda x: count_letters(x,d), range(1001)))
+    print(ans)
+
+def count_letters(x,d):
+    a,b,c,e = x % 10, x // 10 % 10, x // 100 % 10, x // 1000 % 10
+    #print(e,c,b,a)
+    if b == 1:
+        aa=0
+    else:
+        aa=d[a]
+    if b == 1:
+        bb=d[b*10 + a]
+    else:
+        bb=d[b*10]
+    if c > 0:
+        if aa ==0 and bb==0:
+            cc = 7+d[c]
+        else:
+            cc = 3+7+d[c]
+    else:
+        cc = 0
+    if e > 0:
+        ee=8 + d[e]
+    else:
+        ee=0
+
+    #print("%s: %s,%s,%s,%s" % (x,ee,cc,bb,aa))
+    return aa+bb+cc+ee
