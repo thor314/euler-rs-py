@@ -248,9 +248,129 @@ fn count_letters(d: usize, h: &std::collections::HashMap<usize, usize>) -> usize
         cc -= 3 // 100 doesn't have an "and"
     };
     let ee = if e > 0 { 8 + h.get(&e).unwrap() } else { 0 };
-    println!("{}:{},{},{},{}", d, ee, cc, bb, aa);
+    //println!("{}:{},{},{},{}", d, ee, cc, bb, aa);
     aa + bb + cc + ee
 }
+
+// first problem to be a bit of a challenge. I struggled picking a data structure and strategy for this one.
+// A couple possible approaches occur:
+// naive: at each step, pick the greatest next value
+// brute: calculate the value of all 2^14 paths, not hard
+// pruning: similar to brute, but if some sufficiently low sequence is included, exit early (optimization parameters: how often to prune, and what sufficiently low means)
+// This problem begs to be solved recursively somehow.
+#[timings]
+fn e18() {
+    let triangle: Vec<Vec<usize>> = std::fs::read_to_string("src/e18.txt")
+        .unwrap()
+        .lines()
+        .map(|l| {
+            l.split_whitespace()
+                .into_iter()
+                .map(|n| n.parse::<usize>().unwrap())
+                .collect::<Vec<usize>>()
+        })
+        .collect();
+    let res = e18_less_naive_r(&triangle[1..], 75, 0);
+    println!("{}", res);
+}
+/// traverse the triangle picking the greatest value at the next binary choice
+#[allow(dead_code)]
+fn e18_naive_r(t: &[Vec<usize>], running_sum: usize, last_index: usize) -> usize {
+    if t.is_empty() {
+        running_sum
+    } else {
+        let (rs, li) = if t[0][last_index] > t[0][last_index + 1] {
+            (t[0][last_index], last_index)
+        } else {
+            (t[0][last_index + 1], last_index + 1)
+        };
+        println!("append:{},{}", rs, li);
+        e18_naive_r(&t[1..], running_sum + rs, li)
+    }
+}
+// 18 minutes to try naively. Now let's try a little harder.
+// let's try something with look ahead.
+const PEEK_DIST: usize = 5;
+/// traverse the triangle picking the greatest single step-PEEK_DIST-chain at each next binary choice
+fn e18_less_naive_r(t: &[Vec<usize>], running_sum: usize, last_index: usize) -> usize {
+    if t.is_empty() {
+        running_sum
+    } else {
+        // need to peek here
+        let (_, dir, _path) = peek_ahead_r(t, running_sum, last_index, PEEK_DIST, None, vec![]);
+        let (val, ind) = match dir {
+            Dir::Left => (t[0][last_index], last_index),
+            Dir::Right => (t[0][last_index + 1], last_index + 1),
+        };
+        //println!("append val:{}, ind:{}, path:{:?}", val, ind, _path);
+        e18_less_naive_r(&t[1..], running_sum + val, ind)
+    }
+}
+
+// if looking ahead 1 step, terminate, returning (running_sum, LEFT|RIGHT)
+#[derive(Clone, Debug)]
+enum Dir {
+    Left,
+    Right,
+}
+fn peek_ahead_r(
+    t: &[Vec<usize>],
+    running_sum: usize,
+    last_index: usize,
+    mut peek_dist: usize,
+    first_step: Option<Dir>,
+    /* debugging */ mut path: Vec<(usize, usize)>,
+) -> (usize /* value */, Dir, Vec<(usize, usize)>) {
+    if peek_dist > t.len() {
+        peek_dist = t.len()
+    }
+    assert!(peek_dist > 0);
+    if peek_dist == 1 {
+        // if tie:  prefer rightward motion, THIS IS A (temporarily acceptable) BUG
+        if t[0][last_index] > t[0][last_index + 1] {
+            path.push((t[0][last_index], last_index));
+            (
+                t[0][last_index] + running_sum,
+                first_step.unwrap_or(Dir::Left),
+                path,
+            )
+        } else {
+            path.push((t[0][last_index + 1], last_index + 1));
+            (
+                t[0][last_index + 1] + running_sum,
+                first_step.unwrap_or(Dir::Right),
+                path,
+            )
+        }
+    } else {
+        let mut p_left = path.clone();
+        p_left.push((t[0][last_index], last_index));
+        let left = peek_ahead_r(
+            &t[1..],
+            running_sum + t[0][last_index],
+            last_index,
+            peek_dist - 1,
+            first_step.clone().unwrap_or(Dir::Left).into(),
+            p_left,
+        );
+        let mut p_right = path.clone();
+        p_right.push((t[0][last_index + 1], last_index + 1));
+        let right = peek_ahead_r(
+            &t[1..],
+            running_sum + t[0][last_index + 1],
+            last_index + 1,
+            peek_dist - 1,
+            first_step.unwrap_or(Dir::Right).into(),
+            p_right,
+        );
+        if left.0 > right.0 {
+            left
+        } else {
+            right
+        }
+    }
+}
+
 
 fn main() {
     e11();
@@ -260,4 +380,5 @@ fn main() {
     e15();
     e16();
     e17();
+    e18();
 }
