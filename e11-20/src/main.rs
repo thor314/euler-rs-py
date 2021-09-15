@@ -1,4 +1,4 @@
-// a procedural macro decorator to do similar stuff to my python decorator
+// main struggle problems in this section were 11 and 18, and to some extent, 12 and 14. 17 was annoying to debug, but not hard.
 extern crate timings_proc_macro;
 use timings_proc_macro::timings;
 
@@ -64,6 +64,10 @@ fn e11() {
     });
     println!("biggest: {}", big);
 }
+// v elegant: https://github.com/zacharydenton/euler/blob/master/011/grid.rs
+// 1. include_str!("grid.txt") I could be using this macro instead.
+// 2.  .filter_map(|n| n.parse().ok()), well isn't that sweet.
+// 3. his solution collects the maximum value in each direction in an interesting way. Each element is k farther ahead than the current elem. h:1,v:20,d\:21,d/:19. This fails if the line crosses a boundary though.
 
 // What is the value of the first triangle number to have over five hundred divisors?
 #[timings]
@@ -171,6 +175,34 @@ fn e14() {
         }
     }
     println!("biggest seq len: {:?}, for n={:?}", biggest.0, biggest.1);
+}
+
+#[timings] //https://github.com/zacharydenton/euler/blob/master/014/collatz.rs
+fn e14_zach_denton() {
+    let mut collatz: Vec<usize> = vec![0; 1_000_000];
+    collatz[1] = 1;
+    let max = (2..collatz.len())
+        .max_by_key(|&i| {
+            let f = |n: usize| match n % 2 {
+                0 => n / 2,
+                _ => n * 3 + 1,
+            };
+            // og:
+            let (mut j, mut len) = (i, 0);
+            loop {
+                // exit if:
+                if j < collatz.len() && collatz[j] != 0 {
+                    break;
+                }
+                len += 1;
+                j = f(j);
+            }
+            len += collatz[j];
+            collatz[i] = len;
+            len
+        })
+        .unwrap();
+    println!("{}", max);
 }
 
 // How many such (only move left or down) routes are there through a 20×20 grid?
@@ -400,6 +432,7 @@ fn main() {
     e12();
     e13();
     //e14();
+    e14_zach_denton();
     e15();
     e16();
     e17();

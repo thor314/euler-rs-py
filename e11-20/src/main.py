@@ -57,6 +57,13 @@ def e11():
     # not counting up to biggest? Seems not.
     # oh. I transposed a line in d/. Lame. That took 30m to find.
 
+# review: an easier way to get my values:
+#  g = [i.split(' ') for i in g.split('\n')]
+# defining an operator would improve verbosity:
+#  prod = lambda values: reduce(operator.mul, map(int, values))
+# I'm not using comfortable using pythonic `map` in my solutions in python yet.
+#
+
 def multiplicities(inp):
     d = {}
     n = inp
@@ -100,6 +107,7 @@ def e12():
         if n_divisors > 500:
             print("value: %s, the %sth triangle with %s divisors" %(summ, i, n_divisors))
             break
+# look at this factors fn https://github.com/FrankKair/polyglot-euler/blob/master/src/012/p012.py
 
 @time.timing
 def e13():
@@ -112,6 +120,9 @@ def e13():
 
     rows13 = list(map(lambda s: int(s[:13]), rows))
     print("e13:", str(sum(rows13))[:10])
+# review: lol. oneliners. this one used a list comprehension a bit more elegantly than my map. https://github.com/zacharydenton/euler/blob/master/013/large-sum.py
+# print(str(sum(int(line.strip()) for line in digits_string.strip().splitlines()))[:10])
+
 
 def collatz(n):
     if n % 2 == 0:
@@ -151,6 +162,21 @@ def e14():
             biggest = (count_for_it, it)
 
     print("biggest seq len: %s, for n=%s" % (biggest[0], biggest[1]))
+# the level up in elegance, though slow. Caching sequences would probably speed it up. https://github.com/FrankKair/polyglot-euler/blob/master/src/014/p014.py
+def frank_kair_col(n):
+    seq = [n]
+    while n > 1:
+        if n %2==0:
+            n/=2
+        else:
+            n = n*3+1
+        seq.append(n)
+    return seq
+@time.timing
+def frank_kair_e14():
+    s = [len(frank_kair_col(i)) for i in range(1,int(1e6))]
+    print(s.index(max(s))+1) # very elegant, it does take awhile to run though, 20s.
+
 
 @time.timing
 def e15():
@@ -319,6 +345,11 @@ def peek_ahead_r(t,running_sum,last_index,peek_dist,first_step,path):
             return left
         else:
             return right
+# review:
+# okay, so this one was kinda tough. IN fairness, I did implement a moderately complex look-ahead algorithm. But I'm kindof annoyed at how hard this problem was for me.
+# The particularly clever algorithmic trick, starting at the bottom of the triangle and overwriting each entry in the triangle with the maximum of it's two lower children. https://github.com/saturnisbig/euler-python/blob/master/pro018.py
+# or somewhat more clearly implemented: https://github.com/zacharydenton/euler/blob/master/018/triangle-max.py
+# There was also the elegantly implemented recursive brute-force solution: https://github.com/FrankKair/polyglot-euler/blob/master/src/018/p018.py
 
 @time.timing
 def e19():
