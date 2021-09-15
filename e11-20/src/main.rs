@@ -371,6 +371,29 @@ fn peek_ahead_r(
     }
 }
 
+// How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+#[timings]
+fn e19() {
+    // Sundays are uniformly distributed, with P(first is Sunday) = 1/7.
+    // How many first of the months were there? 12*100
+    println!("{}", 12.0 * 100.0 / 7.0);
+}
+// Can't win em all. But when ya do~
+
+#[timings]
+fn e20() {
+    // Find the sum of the digits in the number 100!
+    // would expect the number of digits to be roughly equiv to 50^100, which has about 150 digits, though there will of course be many zeroes, about 24. Still, it seems probably best to just shove it in a bigint. Anything more creative? 97 multiplications (2..99). Some theorem may exist about the sum of digits of the product of two numbers, could search for it. Meh, thought for 5 minutes, do the bigint thing.
+    use num_bigint::BigUint;
+    // note that 2**1000 will have about 300 digits, so can't fit into a normal integer representation. Need a bigint.
+    let a = BigUint::new(vec![2]);
+    let a = (3..=99).fold(a, |acc, i| acc * (i as u32));
+    let res = a
+        .to_string()
+        .chars()
+        .fold(0, |acc, i| acc + i.to_digit(10).unwrap());
+    println!("{:?}", res);
+}
 
 fn main() {
     e11();
@@ -381,4 +404,6 @@ fn main() {
     e16();
     e17();
     e18();
+    e19();
+    e20();
 }

@@ -229,3 +229,106 @@ def count_letters(x,d):
 
     #print("%s: %s,%s,%s,%s" % (x,ee,cc,bb,aa))
     return aa+bb+cc+ee
+
+@time.timing
+def e18():
+    from pathlib import Path
+    import os
+    tri = Path('/home/thor/euler/e11-20/src/e18.txt').read_text()
+    #print(s)
+    rows = tri.strip().split('\n')
+    v = []
+    for row in rows:
+        v.append([int(k) for k in row.split(' ')])
+    res = h18_r(v[1:], 75,0)
+    print(res)
+
+def h18_r_naive(t, running_sum, last_index):
+    if len(t) == 0:
+        return running_sum
+    else:
+        if t[0][last_index] > t[0][last_index +1]:
+            (rs, li) = (t[0][last_index], last_index)
+        else:
+            (rs,li) =(t[0][last_index + 1], last_index + 1)
+        print("append:%s,%s"%(rs,li))
+        return h18_r_naive(t[1:],running_sum + rs, li)
+PEEK_DIST = 5
+def h18_r(t, running_sum, last_index):
+    if len(t) == 0:
+        return running_sum
+    else:
+        # peek
+        (_, direc, _path) = peek_ahead_r(t, running_sum, last_index, PEEK_DIST, None, [])
+        if direc == "left":
+            (val, ind)= (t[0][last_index], last_index)
+        else:
+            (val, ind)= (t[0][last_index+1], last_index+1)
+        print("append:%s,%s,%s"%(val,ind,""))
+        return h18_r(t[1:],running_sum + val, ind)
+def peek_ahead_r(t,running_sum,last_index,peek_dist,first_step,path):
+    if peek_dist > len(t):
+        peek_dist = len(t)
+    if peek_dist == 1:
+        if t[0][last_index] > t[0][last_index +1]:
+            path.append((t[0][last_index], last_index))
+            if not first_step:
+                first_step="left"
+            return (
+                t[0][last_index] + running_sum,
+                first_step,
+                path
+            )
+        else:
+            path.append((t[0][last_index + 1], last_index +1))
+            if not first_step:
+                first_step="right"
+            return (
+                t[0][last_index+1] + running_sum,
+                first_step,
+                path
+            )
+    else:
+        if not first_step:
+            first_step_l="left"
+            first_step_r="right"
+        else:
+            first_step_l=first_step
+            first_step_r=first_step
+        p_left = path
+        p_left.append((t[0][last_index], last_index))
+        left = peek_ahead_r(
+            t[1:],
+            running_sum+t[0][last_index],
+            last_index,
+            peek_dist - 1,
+            first_step_l,
+            p_left,
+        )
+        p_right = path
+        p_right.append((t[0][last_index+1],last_index+1))
+        right = peek_ahead_r(
+            t[1:],
+            running_sum+t[0][last_index+1],
+            last_index+1,
+            peek_dist - 1,
+            first_step_r,
+            p_right,
+        )
+        if left[0] > right[0]:
+            return left
+        else:
+            return right
+
+@time.timing
+def e19():
+    print(12*100/7)
+
+@time.timing
+def e20():
+    import functools
+    from operator import mul
+    a = str(functools.reduce(mul, range(1,100),1))
+    #print(a)
+    b = functools.reduce(lambda x,y: int(x)+int(y), a)
+    print(b)
