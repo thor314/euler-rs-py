@@ -97,7 +97,7 @@ def get_cycle_lens(divisor): # -> (n, cycle_len)
         remainder*=10
         s += str(quotient)
         repeat_b,repeat_ind = check_repeats(s)
-   r eturn (divisor,repeat_ind)
+    return (divisor,repeat_ind)
 
 def check_repeats(s):
     M_SLICE_LEN = 3
@@ -111,3 +111,104 @@ def check_repeats(s):
         if chunk == last_chunk:
             return True, last_idx
     return False,0
+
+@time.timing
+def e27():
+    arr = [((a,b),e27_prime_seq_len(2,a,b,2)) for a in range(-1000,1000) for b in filter(lambda b: is_prime(b) and is_prime(1+a+b), range(max(a,2),1000))]
+    arr=sorted(arr, key=lambda x: x[1],reverse=True)
+    print(arr[0], arr[0][0][0]*arr[0][0][1])
+
+def e27_prime_seq_len(n,a,b,counter):
+    next = n**2 + a*n + b
+    if is_prime(next):
+        return e27_prime_seq_len(n+1,a,b,counter+1)
+    else:
+        return counter
+
+def is_prime(n):
+    if n < 2:
+        return False
+    elif n == 2:
+        return True
+    else:
+        if n%2==0:
+            return False
+        lim=math.ceil(math.sqrt(n)+1)
+        for i in range(3,lim,2):
+            if n%i==0:
+                return False
+        return True
+
+@time.timing
+def e28():
+    s=1001
+    v=e28_gen_arr(s)
+    row_sums = sum([v[i][i] for i in range(s)])+sum([v[s-1-i][i] for i in range(s)])-v[s//2][s//2]
+    print(row_sums)
+
+def e28_gen_arr(size):
+    #arr=[[0]*size]*size # Ugh, I can't do this? How to fix?
+    arr=[]
+    for i in range(size):
+        col=[]
+        for j in range(size):
+            col.append(0)
+        arr.append(col)
+    i,j=size//2,size//2
+    count=1
+
+    while True:
+        if arr[i][j]!=0:
+            raise ValueError('Already has value at index i:%s j:%s; %s' % (i,j, arr[i][j]))
+        arr[i][j]=count
+        count+=1
+
+        if (i,j) == (0,size-1):
+            return arr
+        else:
+            if i == j:
+                if i <= size//2:
+                    dirr="right"
+                else:
+                    dirr="left"
+            elif i<j:
+                if i+j >= size:
+                    dirr="down"
+                else:
+                    dirr="right"
+            else:
+                if i+j>size-1:
+                    dirr="left"
+                else:
+                    dirr="up"
+        if dirr=="right":
+            j+=1
+        elif dirr=="left":
+            j-=1
+        elif dirr=="up":
+            i-=1
+        elif dirr=="down":
+            i+=1
+
+@time.timing
+def e29():
+    r = set([a**b for a in range(2,101) for b in range(2,101)])
+    print(len(r))
+
+@time.timing
+def e30():
+    # Find the sum of all the numbers that can be written as the sum of fifth powers of their digits.
+    # note 9**5=59049; therefore n is at most 590490, and probably much less
+    results=[i for i in range(2,590_490) if is_fifth_pow_sum(i)]
+    print(sum(results),results)
+
+def is_fifth_pow_sum(n):
+    digit_v = digits(n)
+    summ=sum([i**5 for i in digit_v])
+    return summ==n
+
+def digits(n):
+    arr=[]
+    for d in str(n):
+        arr.append(int(d))
+    return arr
