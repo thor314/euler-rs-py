@@ -2,7 +2,6 @@ import math
 from importlib.machinery import SourceFileLoader
 time = SourceFileLoader("main","../../e1-10/src/main.py").load_module()
 
-
 def is_amicable(a):
     if a % 2 == 0: # 50% optimization for n odd
         get_divisors = lambda n: [i for i in filter(lambda x: n%x==0, range(1,int(n/2+1)))]
@@ -15,7 +14,6 @@ def is_amicable(a):
     #print(a,div_a, divisors_sum,other_divisors, other_sum)
     if a == other_sum and a != divisors_sum:
         print(a, divisors_sum)
-        #print("AHTNEHOUEHUT")
         return True
     else:
         return False
@@ -111,6 +109,25 @@ def check_repeats(s):
         if chunk == last_chunk:
             return True, last_idx
     return False,0
+# This is one I should spend a bit of time on the review. It took me a long time to come up with a not crap algorithm.
+# Wow. Dark magic. https://github.com/nayuki/Project-Euler-solutions/blob/e4ea051b715390924114aa35936f21a2ac585144/python/p026.py
+def e26_nayuki():
+    # usage of "key" here isn't something I knew I could do!
+    print(max(range(1,1000), key=reciprocal_cycle_len))
+def reciprocal_cycle_len(n):
+    import itertools
+    seen={}
+    x=1
+    for i in itertools.count():
+        if x in seen:
+            print("seen:",x, seen[x])
+            return i - seen[x]
+        else:
+            print("unseen:",x,i)
+            seen[x]=i
+            x = x*10%n
+
+
 
 @time.timing
 def e27():
@@ -189,7 +206,7 @@ def e28_gen_arr(size):
             i-=1
         elif dirr=="down":
             i+=1
-
+# Others made a clever sequence observation to avoid constructing the array: https://github.com/nayuki/Project-Euler-solutions/blob/e4ea051b715390924114aa35936f21a2ac585144/python/p028.py
 @time.timing
 def e29():
     r = set([a**b for a in range(2,101) for b in range(2,101)])

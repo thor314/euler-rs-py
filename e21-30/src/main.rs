@@ -1,6 +1,6 @@
 #![feature(destructuring_assignment)]
 extern crate timings_proc_macro;
-use num_bigint::BigUint;
+//use num_bigint::BigUint;
 use timings_proc_macro::timings;
 
 fn is_amicable(a: usize) -> bool {
