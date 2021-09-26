@@ -93,7 +93,7 @@ fn e33() {
 // LET'S GET INEFFICIENT
 use num::Integer;
 use std::collections::HashSet;
-use std::ops::Mul;
+use std::ops::{Index, Mul};
 use std::str::FromStr;
 #[derive(Debug)]
 struct Fraction<T: Mul>(T, T);
@@ -338,6 +338,56 @@ fn test_e38() {
     assert_eq!(192384576, e38_expand(192));
 }
 
+#[timings]
+fn e39() {
+    let arr: Vec<_> = (1..=1000).map(n_right_triangles).collect();
+    let m = arr.iter().max().unwrap();
+    let ind = arr.iter().position(|k| k == m).unwrap() + 1;
+    println!("ind:{}; value:{}", ind, m);
+}
+
+fn n_right_triangles(n: usize) -> usize {
+    let mut count = 0;
+    for a in 1..(n / 2) {
+        for b in std::cmp::min(a, n / 2)..(n - a) {
+            let c = n - a - b;
+            if a * a + c * c == b * b {
+                count += 1;
+            }
+        }
+    }
+    //println!("n:{}; count:{}", n, count);
+    count
+}
+
+// get the sum of d_1,d_10...d_1m
+// where d=0.12345678910111213..
+#[timings]
+fn e40() {
+    let mut s = String::with_capacity(1_100_000);
+    // each value greater than 100,000 adds 6 elements to the array. 1m/6 plus a bit is about the right number of elements to cycle through.
+    for i in 0..190_000 {
+        s.push_str(&i.to_string());
+    }
+    if s.len() < 1_000_000 {
+        panic!("ohno my math,len:{}", s.len());
+    }
+    let digits: Vec<u32> = s
+        .chars()
+        .enumerate()
+        .filter(|(i, _c)| is_pow_ten(*i))
+        .map(|(_i, c)| c.to_digit(10).unwrap())
+        .collect();
+    println!(
+        "sum: {}, digits:{:?}",
+        digits.iter().product::<u32>(),
+        digits
+    );
+}
+fn is_pow_ten(n: usize) -> bool {
+    n == 1 || n == 10 || n == 100 || n == 1000 || n == 10000 || n == 100_000 || n == 1_000_000
+}
+
 fn main() {
     //e31();
     e32();
@@ -347,4 +397,6 @@ fn main() {
     e36();
     e37();
     e38();
+    //e39();
+    e40();
 }

@@ -189,6 +189,39 @@ def is_pandigital(n):
     s=set("123456789")
     return len(set(str(n)).intersection(s))==9 and len(str(n))==9
 
+# If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three solutions for p = 120.
+# {20,48,52}, {24,45,51}, {30,40,50}
+# For which value of p ≤ 1000, is the number of solutions maximised?
+@time.timing
+def e39():
+    arr = [n_right_triangles(i) for i in range(1,1001)]
+    m=max(arr)
+    ind=arr.index(m)+1
+    print("ind:",ind, "value:",m)
+
+def n_right_triangles(n):
+    # a*a+b*b=c*c; a+b+c=n
+    count=0
+    for a in range(1,n//2):
+        for b in range(min(a,n//2),n-a): # wlog, let b be the largest
+            c=n-a-b
+            if a*a+c*c==b*b:
+                count+=1
+    return count
+
+@time.timing
+def e40():
+    from functools import reduce
+    s=""
+    for i in range(190_000):
+        s+= str(i)
+    digits = list(map(lambda tup: tup[1],filter(lambda tup: is_pow_ten(tup[0]),enumerate(s))))
+    prod=reduce(lambda x,y:int(x)*int(y), digits)
+    print(prod, digits)
+
+def is_pow_ten(n):
+    return n == 1 or n == 10 or n == 100 or n == 1000 or n == 10000 or n == 100_000 or n == 1_000_000
+
 import unittest
 class MyTest(unittest.TestCase):
     def test_num_ways_sum(self):
