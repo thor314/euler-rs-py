@@ -106,3 +106,138 @@ def e44():
         candidates = set(filter(lambda e: e[0] > p_i, candidates))
         #print(i,"candidates remaining:", candidates)
         pent_set.add(p_i)
+
+
+@time.timing
+def e45():
+    t=lambda n: n*(n+1)//2
+    p=lambda n: n*(3*n-1)//2
+    h=lambda n: n*(2*n-1)
+    tk,pk,hk=(1,1),(1,1),(1,1)
+    for i in range(1,1_000_000):
+        if tk[1]==pk[1] and pk[1]==hk[1]:
+            print(i,tk,pk,hk)
+        m=min(min(tk[1],pk[1]),hk[1])
+        if tk[1] == m:
+            tk = (tk[0]+1,t(tk[0]+1))
+        elif pk[1] ==m:
+            pk = (pk[0]+1,p(pk[0]+1))
+        else:
+            hk = (hk[0]+1,h(hk[0]+1))
+
+
+@time.timing
+def e46():
+    from itertools import takewhile
+    candidates = [True]*1_000_000
+    candidates[1]=False
+    for i in range(len(candidates)//2):
+        candidates[i*2]=False
+
+    primes=list(takewhile(lambda n: n < 10_000,eratosthenes()))
+    for p in primes:
+        candidates[p]=False
+
+    c=0
+    for n in range(50):
+        c+=1
+        n=c*c*2
+        for p in primes:
+            candidates[n+p]=False
+    print(candidates.index(True))
+
+def prime_factors(x):
+    factors = set()
+    while x % 2 == 0:
+        factors.add(2)
+        x/=2
+
+    breakpt = math.sqrt(x)
+    i = 3
+    while x > 1:
+        if x == breakpt+1:
+            factors.add(x)
+            break
+        while x % i == 0:
+            factors.add(i)
+            x /= i
+            breakpt = math.sqrt(x)
+        i += 2
+
+    return(factors)
+
+@time.timing
+def e47():
+    running=[]
+    from itertools import count
+    for i in range(100000,1000000):
+        #print(i)
+        if len(running)==4:
+            print(min(running))
+            break
+
+        pf_i=prime_factors(i)
+        #debugging:
+        if len(running)==3:
+            print("almost:", i, pf_i, running)
+        if len(pf_i)==4:
+            #print("cand", i, pf_i, running)
+            running.append(i)
+        else:
+            running.clear()
+
+
+@time.timing
+def e48():
+    tot=0
+    for i in range(1,1001):
+        tot+= i**i % 10**10
+    print(tot % 10**10)
+
+def is_perm_cheat(a,b):
+    a=str(a)
+    b=str(b)
+    for c in a:
+        if c not in b:
+            return False
+    for c in b:
+        if c not in a:
+            return False
+    return True
+
+@time.timing
+def e49():
+    from itertools import takewhile;
+    primes = set(filter(lambda p: p > 1000, takewhile(lambda n: n < 10_000,eratosthenes())))
+    for p in primes:
+        qset = [q for q in primes if q < p and is_perm_cheat(p,q)]
+        for q in qset:
+            r = p + (p-q)
+            if r < 10_000 and r in primes and is_perm_cheat(p,r):
+                print(q,p,r,q*10**8+p*10**4+r)
+
+# Which prime, below one-million, can be written as the sum of the most consecutive primes?
+@time.timing
+def e50():
+    from collections import defaultdict
+    # 32 minutes so far
+    from itertools import takewhile;
+    primes = set(takewhile(lambda n: n < 1_000_000,eratosthenes()))
+    plist = list(takewhile(lambda n: n < 500_000,eratosthenes()))
+
+    d = defaultdict(lambda : 0)
+    greatest_seen=300
+    for (i,p) in enumerate(plist):
+        ct=p
+        for (seq_len,q) in enumerate(plist[i+1:]):
+            ct+=q
+            if ct > 1_000_000:
+                break
+            if ct in primes and seq_len+1 > d[ct]:
+                d[ct] = seq_len+1
+                #logging
+                if seq_len+1 > greatest_seen:
+                    greatest_seen=seq_len+1
+                    print("p:", p,"ct:",ct, seq_len+1)
+    val = max(d,key=d.get)
+    print(val,d[val])
