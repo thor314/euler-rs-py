@@ -117,6 +117,8 @@ fn e44() {
         pent_set.insert(p_i);
     }
 }
+// review: my algorithm was fine. I could have exploited algebra for an is_pent() function.
+// https://github.com/dhbradshaw/ProjectEulerFastRust/blob/master/src/problems.rs#L1537
 
 // It can be verified that T285 = P165 = H143 = 40755.
 // Find the next triangle number that is also pentagonal and hexagonal.
@@ -310,7 +312,7 @@ fn main() {
     e41();
     e42();
     //e43();
-    //e44();
+    e44();
     e45();
     e46();
     e47();

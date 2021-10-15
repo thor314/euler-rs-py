@@ -8,20 +8,21 @@ use timings_proc_macro::timings;
 fn e31() {
     let coins = vec![200, 100, 50, 20, 10, 5, 2, 1];
     let amt = 200;
-    println!("{}", num_ways_sum(coins, amt));
+    println!("{}", num_ways_sum(&coins, amt));
 }
 #[allow(dead_code)]
-fn num_ways_sum(arr: Vec<usize>, total: usize) -> usize {
+fn num_ways_sum(arr: &Vec<usize>, total: usize) -> usize {
     if total == 0 {
         1
     } else {
         let mut fin = 0;
         let arr_ = arr
-            .into_iter()
-            .filter(|&x| x <= total)
+            .iter()
+            .filter(|&x| x <= &total)
+            .copied()
             .collect::<Vec<usize>>();
         for (i, coin) in arr_.iter().enumerate() {
-            fin += num_ways_sum(arr_[i..].to_vec(), total - coin);
+            fin += num_ways_sum(&arr_[i..].to_vec(), total - *coin);
         }
         fin
     }
@@ -90,7 +91,7 @@ fn e33() {
         .fold(Fraction(1, 1), |acc, i| acc * i);
     println!("{:?}", product.reduce());
 }
-// LET'S GET INEFFICIENT
+
 use num::Integer;
 use std::collections::HashSet;
 use std::ops::{Index, Mul};
@@ -244,7 +245,7 @@ fn is_pal_dec(n: &usize) -> bool {
 }
 fn is_pal_bin(n: &usize) -> bool {
     let b = to_binary(n);
-    b == b.iter().cloned().rev().collect::<Vec<u8>>()
+    b == b.iter().copied().rev().collect::<Vec<u8>>()
 }
 fn to_binary(n: &usize) -> Vec<u8> {
     format!("{:b}", n)
@@ -389,7 +390,7 @@ fn is_pow_ten(n: usize) -> bool {
 }
 
 fn main() {
-    //e31();
+    e31();
     e32();
     e33();
     //e34();
