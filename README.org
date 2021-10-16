@@ -1,7 +1,7 @@
 * Experiment: How Effective is Prototyping? Measuring Developer productivity in Python and Rust with Project Euler
 I was interested in the time-effectiveness of problem-solving different progamming languages. I looked for research around comparative developer productivity across languages, but came up mostly empty-handed, so I constructed an personal experiment using [[https://projecteuler.net/][Project Euler]].
 
-Professionally, I write Rust for the smart contract platform [[://near.org/][NEAR]]. Years ago, I learned to program in Python, though have not written much for several years, and wanted an excuse to brush up.
+Professionally, I write Rust for the smart contract platform [[https://near.org/][NEAR]]. Years ago, I learned to program in Python, though have not written much for several years, and wanted an excuse to brush up.
 
 ** In Short:
 I solved the first 50 problems in Project Euler in Rust and Python, randomizing the language I started in, then translating the solution to the remaining language. I timed each part of the process. After an adjustment period to regain Python familiarity, I found that solving problems in Python was substantially faster than solving the problems in Rust, even despite my greater experience with the Rust programming language.
@@ -37,8 +37,8 @@ I note that there are confounding factors to my case study whose effect sizes I 
 
 ** Looking but not Finding: The Curse of Walled Garden Research Journals
 On Google Scholar and Arxiv, I searched for:
-- = "programming language" efficiency OR productivity=
-- = "programming language" AND (productivity OR efficiency OR effectiveness OR prototyping)=
+- =programming language efficiency OR productivity=
+- =programming language AND (productivity OR efficiency OR effectiveness OR prototyping)=
 - =comparative "programming language" AND (productivity OR efficiency OR effectiveness)=
 
 among several other permutations of keywords.
