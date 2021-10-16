@@ -1,0 +1,66 @@
+* Experiment: How Effective is Prototyping? Measuring Developer productivity in Python and Rust with Project Euler
+I was interested in the time-effectiveness of problem-solving different progamming languages. I looked for research around comparative developer productivity across languages, but came up mostly empty-handed, so I constructed an personal experiment using [[https://projecteuler.net/][Project Euler]].
+
+Professionally, I write Rust for the smart contract platform [[://near.org/][NEAR]]. Years ago, I learned to program in Python, though have not written much for several years, and wanted an excuse to brush up.
+
+** In Short:
+I solved the first 50 problems in Project Euler in Rust and Python, randomizing the language I started in, then translating the solution to the remaining language. I timed each part of the process. After an adjustment period to regain Python familiarity, I found that solving problems in Python was substantially faster than solving the problems in Rust, even despite my greater experience with the Rust programming language.
+
+My data suggests that any problem taking *35 minutes* or more to develop a solution in Rust alone could plausibly be *solved quicker by first developing a solution in Python, then translating the solution to Rust.*
+
+I note that there are confounding factors to my case study whose effect sizes I have little capacity to estimate the impact of; readers are advised to refrain from over-extrapolating from a case study by a single developer on his sample size of 50 (actually 24, see Confounding Factors below) scope-constrained problems.
+
+** Results ([[https://docs.google.com/spreadsheets/d/1CJIizjl2PEgeTu3wbmF9wxItOhcdYtNh3fnXZdqDh-8/edit?usp=sharing][see spreadsheet]], [[https://github.com/thor314/euler-rs-py][see code]]):
+- Prototyping was worthwhile for any task of reasonable (*>35 minutes*) complexity; ie. where the solution was not immediately obvious
+- Python-first implementations averaged *20 minutes*, Rust-first implementations averaged *34.7 minutes*, a *~40% time difference*
+- Solution translation time averaged *12.5 minutes*, both from Rust to Python and vice versa.
+- The most effective way to increase the time on any problem was to be interrupted repeatedly, followed by trying to solve the problem in a dumb way, and having to re-approach the problem.
+- Imperative-style solutions were generally harder to debug than Functional-style solutions. Debugging accounted roughly half (not measured) of the total time spent programming. Minimizing the number of mutable variables was useful for debugging, as was preemptively writing debugging logs.
+- Usage of the Python REPL was less cumbersome than writing Rust tests for testing pieces of code.
+- My Python fluency increased over the course of the experiment, while my Rust fluency appeared to stay roughly constant.
+- I hypothesize that language minutia (eg. references, mutability constraints, types) competes with attention toward the total solution, reducing developer productivity for complexity.
+- Further, I hypothesize that simply whiteboarding out a solution before implementation may have even greater returns on efficiency, as whiteboarding has the least language minutia of all languages :I
+
+** Data and Graphs
+
+*** Data
+|                   | mins: solve | mins: translate | mins: rs solve | mins: py solve | mins: rs from py | mins: py from rs |
+| AVERAGES:         |        25.9 |            12.3 |           28.8 |           22.4 |             12.5 |             12.1 |
+| AVERAGE: first 25 |        23.3 |            12.1 |           22.0 |           24.7 |             12.6 |             11.7 |
+| AVERAGE: 10-25    |        30.9 |            16.6 |           28.1 |           37.3 |             20.9 |             14.6 |
+| AVERAGE: last 25  |        28.2 |            12.5 |           34.7 |           20.0 |             12.4 |             12.5 |
+
+*** Graphs
+[[file:media/2021-10-15_13-19-22_screenshot.png]]
+
+[[file:media/2021-10-15_13-19-35_screenshot.png]]
+
+** Looking but not Finding: The Curse of Walled Garden Research Journals
+On Google Scholar and Arxiv, I searched for:
+- ="programming language" efficiency OR productivity=
+- ="programming language" AND (productivity OR efficiency OR effectiveness OR prototyping)=
+- =comparative "programming language" AND (productivity OR efficiency OR effectiveness)=
+
+among several other permutations of keywords.
+
+Unfortunately, results from Google Scholar of any relevance were universally behind journal paywalls, while results from Arxiv were irrelevant. [[https://www.sciencedirect.com/science/article/abs/pii/S2210650220303734][Several]] [[https://ieeexplore.ieee.org/abstract/document/5615739][results]] [[https://journals.sagepub.com/doi/abs/10.1177/1094342004048537][looked]] reasonably promising, but lacking a subscription to SAGE, Elsevier, or IEEE, the closest I got to any substantial research about the comparative effectiveness of programming languages in terms of developer time was [[https://redmonk.com/dberkholz/2013/03/25/programming-languages-ranked-by-expressiveness/][an article by Donnie Berkholz]] on "Programming languages ranked by expressiveness" from 2013, which was reasonably interesting, but entirely off topic for this review.
+
+I'm not a professional researcher. If someone with more research cred has insight about how I might do better research in the future without paying for journal subscription, I'd love to receive an email from you at thorck at protonmail dot com.
+
+** Confounding Factors
+Over the course of the experiment, my life was at least a standard deviation over the mean Level of Chaos (the other LoC). Travel, a job change, and personal life changes extended the length of the experiment and disrupted a couple problems. If disrupted, I stopped my running timer and added the taken time to the remaining time to complete the problem. Nevertheless, the variance effects of my meatspace environment on my programmatic attention is difficult to account for. I dropped two problems (18 and 26) from analysis, as they were subject to repeated interruptions and false starts.
+
+My sample size amounts to 50 problems, of which the first 10 were unusually easy to complete. My python fluency returned over the course of the experiment, and the earlier questions are unlikely to reflect the actual results of the experiment. The final 24 problems are a better indicator on effectiveness of Python implementation, and from what I draw my results. This is admittedly, not a large sample size.
+
+** Further Questions
+If I return to Project Euler for problems 51-X, I would like to test my hypotheses that whiteboarding would likely be as effective as, if not more effective, prototyping a solution in Python.
+
+I'd also be interested in swapping Rust out for another language. Among my industry's lingua franca are Rust, Go, Typescript, and Solidity, though I maintain a personal fascination with more functional languages. Of these, I'd probably choose to swap out Rust for Go (admittedly a very unfunctional language).
+
+Finally, Project Euler problems are reasonably small-scope, and well defined by programming standards. Research on the value of prototyping, for instance, a command-line tool, or a website would be interesting. How significant would differences in language libraries be in confounding the value of prototyping? Is prototyping a better tool for closely scoped problems in general, where the translation from one language to another is reasonably direct? I would guess that, the greater the difference between language libraries, the less worthwhile using another language to prototype would be, as I have done here. But for problems of simple algorithm definition, prototyping seems likely to be at a local maximum for developer utility.
+
+** Actionable Takeaways
+- Outlining Matters. Prototyping was found to be worthwhile when the problem was well-scoped but sufficiently complex. Any problem taking more than 35 minutes to develop a solution for in Rust was worth prototyping in Python. If given choice of language to take a programming interview, I would consider choosing Python over Rust. If taking an interview in Rust, I would emphasize the importance of sketching out a solution on a whiteboard, or as code stubs, before implementing the solution.
+- Debugging Sucks, So Don't Write Bugs! (or catch them quickly). Anticipating bugs by setting up tests and debugging logs before setting up implementation details was useful for reducing time spent locating problems. Generally prefer functional solutions to imperative solutions. A single mutable data structure is easier to debug than a collection of mutable variables.
+- "Assembly of [[https://www.amazon.com/Zen-Art-Motorcycle-Maintenance-Inquiry/dp/0060839872/ref=sr_1_1?dchild=1&keywords=zen+and+art+of+motorcycle&qid=1634413147&sr=8-1][Japanese bicycle]] require great peace of mind!" Distractions are still the Antichrist. I dropped two outlier problems from the dataset. What they had in common: they were started in Rust, I had to rewrite each, and I was distracted and/or pulled away from each of them at least once. My bias to over-value attention health feels justified by the data. Start a problem with a clear mind, without distractions, or else get back to that state of mind.
+- Think First: Solve the Right Problem with the Right Stuff. Not thinking first is as bad as getting distracted, and is a likely sign that I already am distracted. Reaching the right tools means actively thinking about implementation options before diving in. The reward is not having to rewrite my crappy code, and enjoying more concise and run with lower asymptotic bounds.
