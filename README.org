@@ -10,7 +10,7 @@ My data suggests that any problem taking *35 minutes* or more to develop a solut
 
 I note that there are confounding factors to my case study whose effect sizes I have little capacity to estimate the impact of; readers are advised to refrain from over-extrapolating from a case study by a single developer on his sample size of 50 (actually 24, see Confounding Factors below) scope-constrained problems.
 
-** Results ([[https://docs.google.com/spreadsheets/d/1CJIizjl2PEgeTu3wbmF9wxItOhcdYtNh3fnXZdqDh-8/edit?usp=sharing][see spreadsheet]], [[https://github.com/thor314/euler-rs-py][see code]]):
+** Results ([[https://docs.google.com/spreadsheets/d/1CJIizjl2PEgeTu3wbmF9wxItOhcdYtNh3fnXZdqDh-8/edit?usp=sharing][see spreadsheet]]):
 - Prototyping was worthwhile for any task of reasonable (*>35 minutes*) complexity; ie. where the solution was not immediately obvious
 - Python-first implementations averaged *20 minutes*, Rust-first implementations averaged *34.7 minutes*, a *~40% time difference*
 - Solution translation time averaged *12.5 minutes*, both from Rust to Python and vice versa.
