@@ -37,8 +37,8 @@ I note that there are confounding factors to my case study whose effect sizes I 
 
 ** Looking but not Finding: The Curse of Walled Garden Research Journals
 On Google Scholar and Arxiv, I searched for:
-- ="programming language" efficiency OR productivity=
-- ="programming language" AND (productivity OR efficiency OR effectiveness OR prototyping)=
+- = "programming language" efficiency OR productivity=
+- = "programming language" AND (productivity OR efficiency OR effectiveness OR prototyping)=
 - =comparative "programming language" AND (productivity OR efficiency OR effectiveness)=
 
 among several other permutations of keywords.
